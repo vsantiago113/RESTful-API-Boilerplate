@@ -1,1 +1,1 @@
-# Flask-API-Boilerplate
+# RESTful-API-Boilerplate
