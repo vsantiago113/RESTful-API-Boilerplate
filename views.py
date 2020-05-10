@@ -107,7 +107,7 @@ class TestRouters(Resource):
             offset = 0
         else:
             offset = args.Offset
-            
+
         items = []
         for k, v in devices['routers'].items():
             v.update({'id': str(k)})
@@ -141,7 +141,7 @@ class ListRouters(Resource):
             offset = 0
         else:
             offset = args.Offset
-            
+
         items = []
         for k, v in devices['routers'].items():
             v.update({'id': str(k)})
@@ -162,7 +162,8 @@ class ListRouters(Resource):
             if device_id not in devices['routers']:
                 break
         devices['routers'][device_id] = data
-        return make_response(jsonify(devices['routers'][device_id]), 200)
+        data.update({'id': device_id})
+        return make_response(jsonify(data), 200)
 
 
 @ns.route('/routers/<int:device_id>')
@@ -185,7 +186,7 @@ class Routers(Resource):
     @jwt_required
     def delete(self, device_id):
         devices['routers'].pop(device_id, None)
-        return make_response(jsonify(devices['routers'][device_id]), 200)
+        return make_response(jsonify({'msg': f'Device ID: {device_id} has been deleted!'}), 200)
 
 
 @jwt.token_in_blacklist_loader
