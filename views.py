@@ -107,7 +107,18 @@ class TestRouters(Resource):
             offset = 0
         else:
             offset = args.Offset
-        return make_response(jsonify(dict(list(devices['routers'].items())[offset:page_size])), 200)
+            
+        items = []
+        for k, v in devices['routers'].items():
+            v.update({'id': str(k)})
+            items.append({k: v})
+
+        data = {'url': request.url,
+                'items': items[offset:page_size],
+                'PageSize': page_size,
+                'Offset': offset,
+                'count': len(items[offset:page_size])}
+        return make_response(jsonify(data), 200)
 
 
 @ns.route('/routers')
@@ -130,7 +141,18 @@ class ListRouters(Resource):
             offset = 0
         else:
             offset = args.Offset
-        return make_response(jsonify(dict(list(devices['routers'].items())[offset:page_size])), 200)
+            
+        items = []
+        for k, v in devices['routers'].items():
+            v.update({'id': str(k)})
+            items.append({k: v})
+
+        data = {'url': request.url,
+                'items': items[offset:page_size],
+                'PageSize': page_size,
+                'Offset': offset,
+                'count': len(items[offset:page_size])}
+        return make_response(jsonify(data), 200)
 
     @jwt_required
     def post(self):
