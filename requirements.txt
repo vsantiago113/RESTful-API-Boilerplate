@@ -1,5 +1,4 @@
-flask
-flask-sqlalchemy
-requests
-flask-restful
-flask-jwt-extended
+Flask>=1.1.2
+flask-restx>=0.2.0
+Flask-JWT-Extended>=3.24.1
+requests>=2.23.0
