@@ -54,6 +54,12 @@ devices = {
 def generate_device_id():
     return random.randint(10000, 20000)
 
+  
+@jwt.token_in_blacklist_loader
+def check_if_token_in_blacklist(decrypted_token):
+    jti = decrypted_token['jti']
+    return jti in blacklist
+  
 
 @ns.route('/generatetoken')
 class GenerateToken(Resource):
@@ -63,7 +69,8 @@ class GenerateToken(Resource):
             access_token = create_access_token(identity=request.authorization.username, fresh=True)
             refresh_token = create_refresh_token(identity=request.authorization.username)
             return Response(headers={'X-Example-access-token': access_token,
-                                     'X-Example-refresh-token': refresh_token})
+                                     'X-Example-refresh-token': refresh_token},
+                            status=204, mimetype='application/json')
         else:
             return make_response(jsonify({'message': 'Bad username or password'}), 401)
 
@@ -75,7 +82,8 @@ class RefreshToken(Resource):
         current_user = get_jwt_identity()
         access_token = create_access_token(identity=current_user)
         return Response(headers={'X-Example-access-token': access_token,
-                                 'X-Example-refresh-token': request.headers.get('X-Example-access-token')})
+                                 'X-Example-refresh-token': request.headers.get('X-Example-access-token')},
+                            status=204, mimetype='application/json')
 
 
 @ns.route('/revoketoken')
@@ -84,7 +92,7 @@ class RevokeToken(Resource):
     def post(self):
         jti = get_raw_jwt()['jti']
         blacklist.add(jti)
-        return make_response(jsonify({'msg': 'Successfully logged out'}), 200)
+        return '', 204
 
 
 @ns.route('/lets_get_all_routers')
